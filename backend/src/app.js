@@ -56,6 +56,10 @@ app.use('/api/v1/payments', paymentRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bulk', bulkRouter);
 
+app.get('/ping', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.get('/', (req, res) => {
     res.send('Grocery E-Commerce API is running...');
 });

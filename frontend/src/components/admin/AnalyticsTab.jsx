@@ -154,29 +154,29 @@ const AnalyticsTab = () => {
   if (loading) return <div className="p-8 text-center text-gray-500">Loading analytics...</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header & Filters */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100">
         <div>
-          <h2 className="text-3xl font-bold text-slate-800">Advanced Analytics</h2>
-          <p className="text-gray-500 text-sm mt-1">Customizable insights and business intelligence.</p>
+          <h2 className="text-xl sm:text-3xl font-extrabold text-slate-800">Advanced Analytics</h2>
+          <p className="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1">Customizable insights and business intelligence.</p>
         </div>
         
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
           {timeFilter === 'custom' && (
-            <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-200">
-              <input type="date" value={customStart} onChange={(e)=>setCustomStart(e.target.value)} className="bg-transparent text-sm focus:outline-none text-slate-600" />
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-50 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-xl border border-gray-200 text-xs">
+              <input type="date" value={customStart} onChange={(e)=>setCustomStart(e.target.value)} className="bg-transparent text-xs sm:text-sm focus:outline-none text-slate-600" />
               <span className="text-gray-400">to</span>
-              <input type="date" value={customEnd} onChange={(e)=>setCustomEnd(e.target.value)} className="bg-transparent text-sm focus:outline-none text-slate-600" />
+              <input type="date" value={customEnd} onChange={(e)=>setCustomEnd(e.target.value)} className="bg-transparent text-xs sm:text-sm focus:outline-none text-slate-600" />
             </div>
           )}
 
-          <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
-            <FiCalendar className="text-primary" />
+          <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-gray-200 shadow-sm text-xs sm:text-sm">
+            <FiCalendar className="text-primary text-xs sm:text-sm" />
             <select 
               value={timeFilter} 
               onChange={(e) => setTimeFilter(e.target.value)}
-              className="bg-transparent text-sm font-bold text-slate-700 focus:outline-none"
+              className="bg-transparent text-xs sm:text-sm font-bold text-slate-700 focus:outline-none"
             >
               <option value="today">Today</option>
               <option value="week">Past 7 Days</option>
@@ -190,21 +190,21 @@ const AnalyticsTab = () => {
           <div className="relative">
             <button 
               onClick={() => setShowSettings(!showSettings)}
-              className={`p-2.5 rounded-xl border transition-colors shadow-sm flex items-center justify-center ${showSettings ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}
+              className={`p-2 sm:p-2.5 rounded-xl border transition-colors shadow-sm flex items-center justify-center ${showSettings ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}`}
             >
-              <FiSettings size={18} />
+              <FiSettings size={16} className="sm:w-[18px] sm:h-[18px]" />
             </button>
 
             {showSettings && (
               <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 z-50">
-                <h4 className="font-bold text-slate-800 mb-3 text-sm uppercase tracking-wider">Customize View</h4>
+                <h4 className="font-bold text-slate-800 mb-3 text-xs sm:text-sm uppercase tracking-wider">Customize View</h4>
                 
                 <div className="space-y-4">
                   <div>
-                    <h5 className="text-xs font-semibold text-gray-400 mb-2">METRIC CARDS</h5>
+                    <h5 className="text-[11px] sm:text-xs font-semibold text-gray-400 mb-2">METRIC CARDS</h5>
                     <div className="space-y-2">
                       {Object.keys(widgets.cards).map(key => (
-                        <label key={key} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+                        <label key={key} className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 cursor-pointer">
                           <input type="checkbox" checked={widgets.cards[key]} onChange={() => handleWidgetToggle('cards', key)} className="rounded text-primary focus:ring-primary" />
                           <span className="capitalize">{key === 'aov' ? 'Average Order Value' : key}</span>
                         </label>
@@ -212,10 +212,10 @@ const AnalyticsTab = () => {
                     </div>
                   </div>
                   <div>
-                    <h5 className="text-xs font-semibold text-gray-400 mb-2">CHARTS</h5>
+                    <h5 className="text-[11px] sm:text-xs font-semibold text-gray-400 mb-2">CHARTS</h5>
                     <div className="space-y-2">
                       {Object.keys(widgets.charts).map(key => (
-                        <label key={key} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+                        <label key={key} className="flex items-center gap-2 text-xs sm:text-sm text-slate-600 cursor-pointer">
                           <input type="checkbox" checked={widgets.charts[key]} onChange={() => handleWidgetToggle('charts', key)} className="rounded text-primary focus:ring-primary" />
                           <span className="capitalize">{key} Chart</span>
                         </label>
@@ -230,59 +230,59 @@ const AnalyticsTab = () => {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-4">
         {widgets.cards.revenue && (
-          <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center"><FiDollarSign /></div>
-              <p className="text-sm font-semibold text-gray-500">Revenue</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 text-green-600 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-base"><FiDollarSign /></div>
+              <p className="text-xs sm:text-sm font-semibold text-gray-500">Revenue</p>
             </div>
-            <p className="text-2xl font-black text-slate-800">₹{filteredData.totalRevenue.toLocaleString()}</p>
+            <p className="text-base sm:text-2xl font-black text-slate-800">₹{filteredData.totalRevenue.toLocaleString()}</p>
           </div>
         )}
         {widgets.cards.orders && (
-          <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center"><FiShoppingBag /></div>
-              <p className="text-sm font-semibold text-gray-500">Orders</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 text-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-base"><FiShoppingBag /></div>
+              <p className="text-xs sm:text-sm font-semibold text-gray-500">Orders</p>
             </div>
-            <p className="text-2xl font-black text-slate-800">{filteredData.totalOrders}</p>
+            <p className="text-base sm:text-2xl font-black text-slate-800">{filteredData.totalOrders}</p>
           </div>
         )}
         {widgets.cards.units && (
-          <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center"><FiBox /></div>
-              <p className="text-sm font-semibold text-gray-500">Units Sold</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 text-purple-600 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-base"><FiBox /></div>
+              <p className="text-xs sm:text-sm font-semibold text-gray-500">Units Sold</p>
             </div>
-            <p className="text-2xl font-black text-slate-800">{filteredData.totalUnits}</p>
+            <p className="text-base sm:text-2xl font-black text-slate-800">{filteredData.totalUnits}</p>
           </div>
         )}
         {widgets.cards.aov && (
-          <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center"><FiActivity /></div>
-              <p className="text-sm font-semibold text-gray-500">AOV</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-100 text-indigo-600 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-base"><FiActivity /></div>
+              <p className="text-xs sm:text-sm font-semibold text-gray-500">AOV</p>
             </div>
-            <p className="text-2xl font-black text-slate-800">₹{filteredData.aov.toFixed(2)}</p>
+            <p className="text-base sm:text-2xl font-black text-slate-800">₹{filteredData.aov.toFixed(2)}</p>
           </div>
         )}
         {widgets.cards.cancelled && (
-          <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex items-center justify-center"><FiXCircle /></div>
-              <p className="text-sm font-semibold text-gray-500">Cancelled</p>
+          <div className="bg-white p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-center">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 text-red-600 rounded-lg sm:rounded-xl flex items-center justify-center text-xs sm:text-base"><FiXCircle /></div>
+              <p className="text-xs sm:text-sm font-semibold text-gray-500">Cancelled</p>
             </div>
-            <p className="text-2xl font-black text-slate-800">{filteredData.cancelledOrders}</p>
+            <p className="text-base sm:text-2xl font-black text-slate-800">{filteredData.cancelledOrders}</p>
           </div>
         )}
       </div>
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {widgets.charts.sales && (
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 lg:col-span-2">
-            <h3 className="text-xl font-bold text-slate-800 mb-6">Revenue Trend</h3>
+          <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 lg:col-span-2">
+            <h3 className="text-base sm:text-xl font-bold text-slate-800 mb-3 sm:mb-6">Revenue Trend</h3>
             {chartData.barData.length > 0 ? (
               <div className="h-[350px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -302,8 +302,8 @@ const AnalyticsTab = () => {
         )}
 
         {widgets.charts.products && (
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-            <h3 className="text-xl font-bold text-slate-800 mb-6">Top Products (Units Sold)</h3>
+          <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100">
+            <h3 className="text-base sm:text-xl font-bold text-slate-800 mb-3 sm:mb-6">Top Products (Units Sold)</h3>
             {chartData.topProducts.length > 0 ? (
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -322,10 +322,10 @@ const AnalyticsTab = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full lg:col-span-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 w-full lg:col-span-1">
           {widgets.charts.status && (
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full">
-              <h3 className="text-lg font-bold text-slate-800 mb-2">Order Status</h3>
+            <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full">
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 mb-2">Order Status</h3>
               {chartData.pieData.length > 0 ? (
                 <div className="flex-1 w-full min-h-[250px]">
                   <ResponsiveContainer width="100%" height="100%">
@@ -345,8 +345,8 @@ const AnalyticsTab = () => {
           )}
 
           {widgets.charts.payment && (
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full">
-              <h3 className="text-lg font-bold text-slate-800 mb-2">Payment Methods</h3>
+            <div className="bg-white p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full">
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 mb-2">Payment Methods</h3>
               {chartData.paymentData.length > 0 ? (
                 <div className="flex-1 w-full min-h-[250px]">
                   <ResponsiveContainer width="100%" height="100%">

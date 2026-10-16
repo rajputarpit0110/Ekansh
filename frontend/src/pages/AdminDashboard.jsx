@@ -638,9 +638,9 @@ const AdminDashboard = () => {
         )}
 
         {activeTab === 'customers' && (
-          <div className="bg-white p-12 rounded-3xl shadow-sm border border-gray-100 text-center">
-            <h3 className="text-2xl font-bold text-gray-700 mb-2">Customers Management</h3>
-            <p className="text-gray-500">This module is part of the extended admin features.</p>
+          <div className="bg-white p-6 sm:p-12 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 text-center">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-800 mb-2">Customers Management</h2>
+            <p className="text-gray-500 text-xs sm:text-sm">This module is part of the extended admin features.</p>
           </div>
         )}
       </div>

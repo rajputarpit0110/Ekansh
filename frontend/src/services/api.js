@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
@@ -28,7 +30,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // Attempt to refresh token via backend endpoint
-        const res = await axios.post('/api/v1/auth/refresh-token', {}, { withCredentials: true });
+        const res = await axios.post(`${API_BASE_URL}/auth/refresh-token`, {}, { withCredentials: true });
         if (res.status === 200) {
           const { accessToken } = res.data.data;
           localStorage.setItem('token', accessToken);

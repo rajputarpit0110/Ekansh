@@ -4,7 +4,7 @@ import { fetchAllOrders, updateOrderStatus } from '../redux/slices/orderSlice';
 import { fetchProducts, deleteProductAPI } from '../redux/slices/productSlice';
 import { logoutUser } from '../redux/slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import api, { API_BASE_URL } from '../services/api';
 import { FiUsers, FiShoppingBag, FiDollarSign, FiList, FiGrid, FiStar, FiSettings, FiLogOut, FiEdit2, FiX, FiTrash2, FiBarChart2 } from 'react-icons/fi';
 import AnalyticsTab from '../components/admin/AnalyticsTab';
 
@@ -315,7 +315,7 @@ const AdminDashboard = () => {
                   )}
                 </form>
                 <div className="mt-4 border-t border-gray-100 pt-4">
-                  <a href="http://localhost:5002/api/v1/bulk/products/export" className="text-primary hover:underline font-medium text-sm">Download Existing Products (CSV)</a>
+                  <a href={`${API_BASE_URL}/bulk/products/export`} className="text-primary hover:underline font-medium text-sm">Download Existing Products (CSV)</a>
                 </div>
                 <iframe name="dummyframe" id="dummyframe" style={{ display: 'none' }}></iframe>
               </div>
@@ -323,7 +323,7 @@ const AdminDashboard = () => {
               <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
                 <h3 className="text-xl font-bold text-gray-700 mb-4">Bulk Image Upload</h3>
                 <p className="text-gray-500 mb-6 text-sm">Select multiple images to upload directly to Cloudinary. They will be auto-optimized to WebP.</p>
-                <form action="http://localhost:5002/api/v1/bulk/images/upload" method="POST" encType="multipart/form-data" target="dummyframe" className="space-y-4">
+                <form action={`${API_BASE_URL}/bulk/images/upload`} method="POST" encType="multipart/form-data" target="dummyframe" className="space-y-4">
                   <input type="file" name="images" accept="image/*" multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" required />
                   <button type="submit" className="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold hover:bg-slate-900 transition-colors shadow-md w-full">Upload Images</button>
                 </form>

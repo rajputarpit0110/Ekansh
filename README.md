@@ -1,4 +1,4 @@
-# FreshMart - MERN Stack Grocery E-Commerce Platform
+# TopNotchProducts - MERN Stack E-Commerce Platform
 
 A fully functional, production-ready, enterprise-grade grocery e-commerce platform built with the MERN Stack (MongoDB, Express.js, React.js, Node.js).
 

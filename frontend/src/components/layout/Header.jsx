@@ -80,8 +80,8 @@ const Header = () => {
       <div className="px-3 sm:px-8 py-2.5 sm:py-4 flex items-center justify-between gap-3 sm:gap-4">
         {/* Logo */}
         <Link to="/" className="text-xl sm:text-2xl font-bold text-primary flex items-center gap-1.5 sm:gap-2">
-          <span className="bg-primary text-white p-1 rounded-md text-xs sm:text-sm font-black">G</span>
-          FreshMart
+          <span className="bg-primary text-white p-1 rounded-md text-xs sm:text-sm font-black">T</span>
+          TopNotchProducts
         </Link>
 
         {/* Desktop Search Bar */}
@@ -145,7 +145,7 @@ const Header = () => {
           <div className="h-6 sm:h-8 w-px bg-gray-200 hidden sm:block"></div>
 
           {user ? (
-            <Link to={user.role === 'superadmin' ? "/admin" : "/dashboard"} className="flex items-center gap-2 text-gray-600 hover:text-primary">
+            <Link to={['admin', 'superadmin'].includes(user.role) ? "/admin" : "/dashboard"} className="flex items-center gap-2 text-gray-600 hover:text-primary">
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
                 <FiUser size={15} className="sm:w-4 sm:h-4" />
               </div>

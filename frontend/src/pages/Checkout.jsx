@@ -96,8 +96,8 @@ const Checkout = () => {
           key: keyData.data.key,
           amount: orderData.data.amount,
           currency: "INR",
-          name: "FreshMart",
-          description: "Grocery Order Payment",
+          name: "TopNotchProducts",
+          description: "TopNotchProducts Order Payment",
           order_id: orderData.data.id,
           handler: function (response) {
              dispatch(createOrder({

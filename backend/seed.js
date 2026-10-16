@@ -85,6 +85,13 @@ const seedData = async () => {
         await User.deleteMany();
 
         // Seed Users
+        const masterAdmin = await User.create({
+            name: "Master Admin",
+            email: "admin@topnotchproducts.com",
+            password: "admin123",
+            role: "superadmin"
+        });
+
         const adminUser = await User.create({
             name: "Admin User",
             email: "admin@freshmart.com",
@@ -98,7 +105,7 @@ const seedData = async () => {
             password: "password123"
         });
 
-        console.log("Admin and Test Users seeded.");
+        console.log("Master Admin, Admin and Test Users seeded.");
 
         // Seed Categories
         const catDocs = await Category.insertMany(

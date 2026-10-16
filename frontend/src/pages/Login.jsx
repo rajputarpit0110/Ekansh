@@ -15,7 +15,11 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate(redirect);
+      if (['admin', 'superadmin'].includes(user.role)) {
+        navigate(redirect === '/' ? '/admin' : redirect);
+      } else {
+        navigate(redirect);
+      }
     }
   }, [user, navigate, redirect]);
 

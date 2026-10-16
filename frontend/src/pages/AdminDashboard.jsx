@@ -26,8 +26,8 @@ const AdminDashboard = () => {
   const [uploadMessage, setUploadMessage] = useState({ type: '', text: '' });
 
   useEffect(() => {
-    if (!user || user.role !== 'superadmin') {
-      navigate('/');
+    if (!user || !['admin', 'superadmin'].includes(user.role)) {
+      navigate('/login?redirect=/admin');
     } else {
       if (activeTab === 'orders' || activeTab === 'overview') {
         dispatch(fetchAllOrders());
@@ -117,10 +117,64 @@ const AdminDashboard = () => {
 
   if (!user || user.role !== 'superadmin') return null;
 
+  const navTabs = [
+    { id: 'overview', icon: FiGrid, label: 'Overview' },
+    { id: 'analytics', icon: FiBarChart2, label: 'Analytics' },
+    { id: 'orders', icon: FiShoppingBag, label: 'Orders', count: allOrders?.length },
+    { id: 'products', icon: FiList, label: 'Products' },
+    { id: 'customers', icon: FiUsers, label: 'Customers' },
+  ];
+
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8 py-8">
-      {/* Sidebar */}
-      <div className="w-full md:w-72 shrink-0 mb-8 md:mb-0 md:mr-8">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50 px-3 py-3 sm:px-6 lg:px-8 sm:py-8">
+      {/* Mobile Top Navigation & App Bar */}
+      <div className="md:hidden w-full mb-4 space-y-2.5">
+        <div className="flex items-center justify-between bg-slate-900 text-white p-3 rounded-2xl shadow-md">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-primary text-white rounded-xl flex items-center justify-center font-black text-sm shadow-sm">
+              A
+            </div>
+            <div>
+              <h2 className="text-xs font-bold text-white leading-tight">Admin Console</h2>
+              <span className="text-[9px] text-green-400 font-bold uppercase tracking-wider">superadmin mode</span>
+            </div>
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+          >
+            <FiLogOut size={13} /> Logout
+          </button>
+        </div>
+
+        {/* Mobile Horizontal Scrolling Tabs */}
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+          {navTabs.map(item => (
+            <button 
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                activeTab === item.id 
+                  ? 'bg-slate-900 text-white shadow-sm' 
+                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              <item.icon size={13} className={activeTab === item.id ? 'text-primary' : 'text-gray-400'} />
+              {item.label}
+              {item.count !== undefined && item.count > 0 && (
+                <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-black ${
+                  activeTab === item.id ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700'
+                }`}>
+                  {item.count}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Sidebar */}
+      <div className="hidden md:block w-72 shrink-0 mb-8 md:mb-0 md:mr-8">
         <div className="bg-slate-900 rounded-3xl shadow-xl overflow-hidden text-slate-300 sticky top-8">
           <div className="p-6 border-b border-slate-800 text-center">
             <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-3 shadow-lg shadow-primary/30">
@@ -131,19 +185,20 @@ const AdminDashboard = () => {
           </div>
 
           <div className="p-4 space-y-1">
-            {[
-              { id: 'overview', icon: FiGrid, label: 'Overview' },
-              { id: 'analytics', icon: FiBarChart2, label: 'Analytics' },
-              { id: 'orders', icon: FiShoppingBag, label: 'Orders' },
-              { id: 'products', icon: FiList, label: 'Products' },
-              { id: 'customers', icon: FiUsers, label: 'Customers' },
-            ].map(item => (
+            {navTabs.map(item => (
               <button 
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-md' : 'hover:bg-slate-800 hover:text-white'}`}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-medium transition-all ${activeTab === item.id ? 'bg-primary text-white shadow-md' : 'hover:bg-slate-800 hover:text-white'}`}
               >
-                <item.icon size={18} /> {item.label}
+                <span className="flex items-center gap-3">
+                  <item.icon size={18} /> {item.label}
+                </span>
+                {item.count !== undefined && item.count > 0 && (
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === item.id ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-300'}`}>
+                    {item.count}
+                  </span>
+                )}
               </button>
             ))}
             
@@ -160,38 +215,65 @@ const AdminDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1">
+      <div className="flex-1 min-w-0">
         {activeTab === 'overview' && (
-          <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-slate-800">Dashboard Overview</h2>
+          <div className="space-y-4 sm:space-y-8">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-800">Dashboard Overview</h2>
             
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Stats Cards (2x2 on mobile) */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
               {[
                 { label: 'Total Revenue', value: `₹${totalRevenue.toLocaleString()}`, icon: FiDollarSign, color: 'text-green-600', bg: 'bg-green-100' },
                 { label: 'Total Orders', value: allOrders?.length || 0, icon: FiShoppingBag, color: 'text-blue-600', bg: 'bg-blue-100' },
                 { label: 'Pending Orders', value: pendingOrders, icon: FiList, color: 'text-orange-600', bg: 'bg-orange-100' },
                 { label: 'Total Users', value: '1,245', icon: FiUsers, color: 'text-purple-600', bg: 'bg-purple-100' },
               ].map((stat, i) => (
-                <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex items-center gap-4">
-                  <div className={`w-14 h-14 ${stat.bg} ${stat.color} rounded-2xl flex items-center justify-center`}>
-                    <stat.icon size={24} />
+                <div key={i} className="bg-white p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-4">
+                  <div className={`w-9 h-9 sm:w-14 sm:h-14 ${stat.bg} ${stat.color} rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0`}>
+                    <stat.icon size={18} className="sm:w-6 sm:h-6" />
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-500 mb-1">{stat.label}</p>
-                    <p className="text-2xl font-bold text-slate-800">{stat.value}</p>
+                  <div className="min-w-0">
+                    <p className="text-[11px] sm:text-sm font-semibold text-gray-500 truncate">{stat.label}</p>
+                    <p className="text-base sm:text-2xl font-bold text-slate-800 truncate">{stat.value}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Recent Orders Preview */}
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h3 className="text-xl font-bold text-slate-800">Recent Orders</h3>
-                <button onClick={() => setActiveTab('orders')} className="text-primary font-semibold hover:underline">View All</button>
+            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              <div className="p-4 sm:p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 className="text-base sm:text-xl font-bold text-slate-800">Recent Orders</h3>
+                <button onClick={() => setActiveTab('orders')} className="text-primary text-xs sm:text-sm font-semibold hover:underline">View All</button>
               </div>
-              <div className="overflow-x-auto">
+
+              {/* Mobile View: Cards */}
+              <div className="md:hidden divide-y divide-gray-100">
+                {loading ? (
+                  <div className="p-6 text-center text-xs text-gray-500">Loading orders...</div>
+                ) : !allOrders || allOrders.length === 0 ? (
+                  <div className="p-6 text-center text-xs text-gray-400">No recent orders yet</div>
+                ) : allOrders?.slice(0, 5).map(order => (
+                  <div key={order._id} className="p-3.5 hover:bg-gray-50 transition-colors">
+                    <div className="flex justify-between items-start mb-1.5">
+                      <div>
+                        <span className="font-bold text-xs text-slate-800">#{order._id.substring(0,8).toUpperCase()}</span>
+                        <p className="text-xs text-gray-500 font-medium">{order.user?.name || 'Guest'}</p>
+                      </div>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${getStatusColor(order.orderStatus)}`}>
+                        {order.orderStatus}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs text-gray-500 mt-2 pt-2 border-t border-gray-50">
+                      <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                      <span className="font-black text-sm text-slate-900">₹{order.totalPrice}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop View: Table */}
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50 text-gray-500 text-sm">
@@ -205,9 +287,11 @@ const AdminDashboard = () => {
                   <tbody>
                     {loading ? (
                       <tr><td colSpan="5" className="p-8 text-center text-gray-500">Loading orders...</td></tr>
+                    ) : !allOrders || allOrders.length === 0 ? (
+                      <tr><td colSpan="5" className="p-8 text-center text-gray-400 font-medium">No recent orders found</td></tr>
                     ) : allOrders?.slice(0, 5).map(order => (
                       <tr key={order._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                        <td className="p-4 font-medium text-slate-800">#{order._id.substring(0,8)}</td>
+                        <td className="p-4 font-medium text-slate-800">#{order._id.substring(0,8).toUpperCase()}</td>
                         <td className="p-4 text-gray-600">{order.user?.name || 'Guest'}</td>
                         <td className="p-4 text-gray-600">{new Date(order.createdAt).toLocaleDateString()}</td>
                         <td className="p-4 font-bold text-slate-800">₹{order.totalPrice}</td>
@@ -230,9 +314,64 @@ const AdminDashboard = () => {
         )}
 
         {activeTab === 'orders' && (
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-slate-800">Manage Orders</h2>
-            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden p-6">
+          <div className="space-y-4 sm:space-y-6">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-800">Manage Orders</h2>
+            
+            {/* Mobile View: Order Cards */}
+            <div className="md:hidden space-y-3">
+              {loading ? (
+                <div className="p-8 text-center text-gray-500 text-xs bg-white rounded-2xl border">Loading all orders...</div>
+              ) : !allOrders || allOrders.length === 0 ? (
+                <div className="p-8 text-center bg-white rounded-2xl border border-gray-100 shadow-sm">
+                  <FiShoppingBag className="mx-auto text-3xl mb-2 text-gray-300" />
+                  <p className="font-bold text-sm text-slate-800">No orders placed yet</p>
+                  <p className="text-xs text-gray-400 mt-1">Customer orders will appear here automatically.</p>
+                </div>
+              ) : allOrders?.map(order => (
+                <div key={order._id} className="bg-white p-3.5 rounded-2xl shadow-sm border border-gray-100 space-y-2.5">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <span className="font-bold text-xs text-slate-800">#{order._id.substring(0,8).toUpperCase()}</span>
+                      <p className="text-xs font-semibold text-gray-700">{order.user?.name || 'Guest'}</p>
+                      <p className="text-[11px] text-gray-400">{order.shippingAddress?.city || 'No city'} • {order.orderItems?.length || 0} items</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-slate-900">₹{order.totalPrice}</p>
+                      <span className="text-[10px] text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 pt-2 border-t border-gray-100">
+                    <select 
+                      value={statusUpdates[order._id] || order.orderStatus}
+                      onChange={(e) => setStatusUpdates({...statusUpdates, [order._id]: e.target.value})}
+                      className={`flex-1 px-2.5 py-1.5 rounded-lg text-xs font-bold border focus:ring-0 ${getStatusColor(statusUpdates[order._id] || order.orderStatus)}`}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Packed">Packed</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Out For Delivery">Out For Delivery</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                      <option value="Refunded">Refunded</option>
+                    </select>
+                    <button 
+                      onClick={() => handleUpdateStatus(order._id)}
+                      disabled={updatingOrderId === order._id || !statusUpdates[order._id] || statusUpdates[order._id] === order.orderStatus}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                        updatingOrderId === order._id ? 'bg-gray-100 text-gray-400' :
+                        !statusUpdates[order._id] || statusUpdates[order._id] === order.orderStatus ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-primary text-white hover:bg-secondary shadow-sm'
+                      }`}
+                    >
+                      {updatingOrderId === order._id ? '...' : 'Save'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop View: Full Table */}
+            <div className="hidden md:block bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden p-6">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
@@ -249,6 +388,8 @@ const AdminDashboard = () => {
                   <tbody>
                     {loading ? (
                       <tr><td colSpan="7" className="p-8 text-center text-gray-500">Loading all orders...</td></tr>
+                    ) : !allOrders || allOrders.length === 0 ? (
+                      <tr><td colSpan="7" className="p-8 text-center text-gray-400 font-medium">No orders found yet.</td></tr>
                     ) : allOrders?.map(order => (
                       <tr key={order._id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
                         <td className="p-4 font-medium text-slate-800">#{order._id.substring(0,8).toUpperCase()}</td>
@@ -297,42 +438,79 @@ const AdminDashboard = () => {
         )}
 
         {activeTab === 'products' && (
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-slate-800">Products Management</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-700 mb-4">Bulk Import (CSV/Excel)</h3>
-                <p className="text-gray-500 mb-6 text-sm">Upload a CSV or Excel file to instantly create hundreds of products.</p>
-                <form onSubmit={handleBulkUpload} encType="multipart/form-data" className="space-y-4">
-                  <input type="file" name="file" accept=".csv, .xlsx" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" required />
-                  <button type="submit" disabled={isUploadingCSV} className={`px-6 py-2 rounded-xl font-bold transition-colors shadow-md w-full ${isUploadingCSV ? 'bg-primary/60 text-white cursor-not-allowed' : 'bg-primary text-white hover:bg-secondary'}`}>
+          <div className="space-y-4 sm:space-y-6">
+            <h2 className="text-xl sm:text-3xl font-extrabold text-slate-800">Products Management</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100">
+                <h3 className="text-base sm:text-xl font-bold text-gray-700 mb-2 sm:mb-4">Bulk Import (CSV/Excel)</h3>
+                <p className="text-gray-500 mb-4 sm:mb-6 text-xs sm:text-sm">Upload a CSV or Excel file to instantly create hundreds of products.</p>
+                <form onSubmit={handleBulkUpload} encType="multipart/form-data" className="space-y-3 sm:space-y-4">
+                  <input type="file" name="file" accept=".csv, .xlsx" className="block w-full text-xs sm:text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" required />
+                  <button type="submit" disabled={isUploadingCSV} className={`px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-md w-full ${isUploadingCSV ? 'bg-primary/60 text-white cursor-not-allowed' : 'bg-primary text-white hover:bg-secondary'}`}>
                     {isUploadingCSV ? 'Uploading...' : 'Upload Products'}
                   </button>
                   {uploadMessage.text && (
-                    <div className={`p-3 rounded-lg text-sm font-semibold mt-2 ${uploadMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                    <div className={`p-2.5 rounded-lg text-xs font-semibold mt-2 ${uploadMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
                       {uploadMessage.text}
                     </div>
                   )}
                 </form>
-                <div className="mt-4 border-t border-gray-100 pt-4">
-                  <a href={`${API_BASE_URL}/bulk/products/export`} className="text-primary hover:underline font-medium text-sm">Download Existing Products (CSV)</a>
+                <div className="mt-3 border-t border-gray-100 pt-3">
+                  <a href={`${API_BASE_URL}/bulk/products/export`} className="text-primary hover:underline font-medium text-xs sm:text-sm">Download Existing Products (CSV)</a>
                 </div>
                 <iframe name="dummyframe" id="dummyframe" style={{ display: 'none' }}></iframe>
               </div>
 
-              <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-700 mb-4">Bulk Image Upload</h3>
-                <p className="text-gray-500 mb-6 text-sm">Select multiple images to upload directly to Cloudinary. They will be auto-optimized to WebP.</p>
-                <form action={`${API_BASE_URL}/bulk/images/upload`} method="POST" encType="multipart/form-data" target="dummyframe" className="space-y-4">
-                  <input type="file" name="images" accept="image/*" multiple className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" required />
-                  <button type="submit" className="bg-slate-800 text-white px-6 py-2 rounded-xl font-bold hover:bg-slate-900 transition-colors shadow-md w-full">Upload Images</button>
+              <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100">
+                <h3 className="text-base sm:text-xl font-bold text-gray-700 mb-2 sm:mb-4">Bulk Image Upload</h3>
+                <p className="text-gray-500 mb-4 sm:mb-6 text-xs sm:text-sm">Select multiple images to upload directly to Cloudinary. They will be auto-optimized to WebP.</p>
+                <form action={`${API_BASE_URL}/bulk/images/upload`} method="POST" encType="multipart/form-data" target="dummyframe" className="space-y-3 sm:space-y-4">
+                  <input type="file" name="images" accept="image/*" multiple className="block w-full text-xs sm:text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" required />
+                  <button type="submit" className="bg-slate-800 text-white px-4 sm:px-6 py-2 rounded-xl text-xs sm:text-sm font-bold hover:bg-slate-900 transition-colors shadow-md w-full">Upload Images</button>
                 </form>
               </div>
             </div>
 
-            <div className="mt-8 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden p-6">
-              <h3 className="text-xl font-bold text-gray-700 mb-4">All Products</h3>
-              <div className="overflow-x-auto">
+            <div className="mt-4 sm:mt-8 bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 overflow-hidden p-3.5 sm:p-6">
+              <h3 className="text-base sm:text-xl font-bold text-gray-700 mb-3 sm:mb-4">All Products</h3>
+
+              {/* Mobile View: Product Cards */}
+              <div className="md:hidden space-y-2.5">
+                {productsLoading ? (
+                  <div className="p-6 text-center text-xs text-gray-500">Loading products...</div>
+                ) : allProducts?.map(product => (
+                  <div key={product._id} className="bg-gray-50/70 p-2.5 rounded-xl border border-gray-100 flex items-center gap-3">
+                    <img src={product.images[0]?.url} alt={product.name} className="w-12 h-12 rounded-lg object-cover shrink-0 border border-gray-200 bg-white" />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-xs text-slate-800 line-clamp-1">{product.name}</h4>
+                      <p className="text-[10px] text-gray-400 truncate">{product.sku} • Stock: {product.stock}</p>
+                      <p className="text-xs font-black text-slate-900 mt-0.5">₹{product.price}</p>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <button 
+                        onClick={() => {
+                          setEditingProduct(product);
+                          setEditFormData({ name: product.name, price: product.price, stock: product.stock });
+                        }}
+                        className="p-1.5 bg-green-100 text-primary rounded-lg text-xs font-bold"
+                        title="Edit"
+                      >
+                        <FiEdit2 size={13} />
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteProduct(product._id)}
+                        className="p-1.5 bg-red-100 text-red-500 rounded-lg text-xs font-bold"
+                        title="Delete"
+                      >
+                        <FiTrash2 size={13} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop View: Full Table */}
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="bg-gray-50 text-gray-500 text-sm">
@@ -381,19 +559,19 @@ const AdminDashboard = () => {
               
               {/* Pagination Controls */}
               {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-2 p-4 border-t border-gray-100 mt-4">
+                <div className="flex justify-center items-center gap-2 p-3 sm:p-4 border-t border-gray-100 mt-3 sm:mt-4">
                   <button 
                     disabled={productPage === 1}
                     onClick={() => setProductPage(prev => Math.max(prev - 1, 1))}
-                    className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 disabled:opacity-50 hover:bg-gray-200"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-semibold bg-gray-100 text-gray-700 disabled:opacity-50 hover:bg-gray-200"
                   >
                     Previous
                   </button>
-                  <span className="text-sm font-medium text-gray-600">Page {productPage} of {totalPages}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-600">Page {productPage} of {totalPages}</span>
                   <button 
                     disabled={productPage === totalPages}
                     onClick={() => setProductPage(prev => Math.min(prev + 1, totalPages))}
-                    className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 disabled:opacity-50 hover:bg-gray-200"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-semibold bg-gray-100 text-gray-700 disabled:opacity-50 hover:bg-gray-200"
                   >
                     Next
                   </button>

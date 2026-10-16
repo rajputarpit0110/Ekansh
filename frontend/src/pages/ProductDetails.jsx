@@ -44,24 +44,24 @@ const ProductDetails = () => {
 
   return (
     <div className="w-full">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-600 hover:text-primary font-bold mb-6 transition-colors">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 sm:gap-2 text-gray-600 hover:text-primary font-bold mb-3 sm:mb-6 text-xs sm:text-base transition-colors">
         <FiArrowLeft /> Back to products
       </button>
 
-      <div className="bg-white p-6 md:p-10 rounded-3xl shadow-sm mb-12 border border-gray-100">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div className="bg-white p-4 sm:p-6 md:p-10 rounded-2xl sm:rounded-3xl shadow-sm mb-6 sm:mb-12 border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-12">
           {/* Image Gallery */}
-          <div className="space-y-4">
-            <div className="w-full aspect-square bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 p-8 flex items-center justify-center relative">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="w-full aspect-square bg-gray-50 rounded-xl sm:rounded-2xl overflow-hidden border border-gray-100 p-4 sm:p-8 flex items-center justify-center relative">
               {discount > 0 && (
-                <span className="absolute top-4 left-4 bg-accent text-white px-3 py-1 text-xs font-bold rounded-md">{discount}% OFF</span>
+                <span className="absolute top-2.5 left-2.5 sm:top-4 sm:left-4 bg-accent text-white px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-bold rounded-md">{discount}% OFF</span>
               )}
               <img src={product.images[0]?.url} alt={product.name} className="w-full h-full object-contain mix-blend-multiply drop-shadow-lg" />
             </div>
             {product.images.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2">
+              <div className="flex gap-2 sm:gap-4 overflow-x-auto pb-2">
                 {product.images.map((img, idx) => (
-                  <div key={idx} className="w-24 h-24 shrink-0 rounded-xl border-2 border-primary overflow-hidden p-2 bg-gray-50 cursor-pointer">
+                  <div key={idx} className="w-16 h-16 sm:w-24 sm:h-24 shrink-0 rounded-xl border-2 border-primary overflow-hidden p-1.5 sm:p-2 bg-gray-50 cursor-pointer">
                     <img src={img} alt="" className="w-full h-full object-cover rounded-md" />
                   </div>
                 ))}
@@ -71,53 +71,53 @@ const ProductDetails = () => {
 
           {/* Product Info */}
           <div className="flex flex-col">
-            <div className="text-sm text-primary mb-2 font-bold tracking-wider uppercase">{product.brand}</div>
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">{product.name}</h1>
+            <div className="text-xs sm:text-sm text-primary mb-1 sm:mb-2 font-bold tracking-wider uppercase">{product.brand}</div>
+            <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-2 sm:mb-4">{product.name}</h1>
             
-            <div className="flex items-center gap-4 mb-6">
-              <div className="flex items-center bg-green-100 px-3 py-1 rounded-md text-primary font-bold text-sm">
+            <div className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6 flex-wrap">
+              <div className="flex items-center bg-green-100 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-md text-primary font-bold text-xs sm:text-sm">
                 <span>{product.rating || 4.5}</span>
                 <FiStar className="ml-1 fill-primary" />
               </div>
-              <span className="text-sm text-gray-500 font-medium underline cursor-pointer">{product.numReviews || 0} Ratings & Reviews</span>
-              <span className="text-sm text-gray-300">|</span>
-              <span className="text-sm font-semibold text-gray-600">Weight: {product.weight}</span>
+              <span className="text-xs sm:text-sm text-gray-500 font-medium underline cursor-pointer">{product.numReviews || 0} Ratings & Reviews</span>
+              <span className="text-gray-300">|</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-600">Weight: {product.weight}</span>
             </div>
 
-            <div className="flex items-end gap-4 mb-8">
-              <span className="text-4xl font-bold text-gray-900">₹{product.price}</span>
+            <div className="flex items-end gap-2.5 sm:gap-4 mb-4 sm:mb-8">
+              <span className="text-2xl sm:text-4xl font-bold text-gray-900">₹{product.price}</span>
               {product.originalPrice && (
-                <span className="text-xl text-gray-400 line-through mb-1">₹{product.originalPrice}</span>
+                <span className="text-base sm:text-xl text-gray-400 line-through mb-0.5 sm:mb-1">₹{product.originalPrice}</span>
               )}
-              <span className="text-sm text-green-600 font-bold mb-1">(Inclusive of all taxes)</span>
+              <span className="text-xs sm:text-sm text-green-600 font-bold mb-0.5 sm:mb-1">(Inclusive of all taxes)</span>
             </div>
 
-            <div className="flex items-center gap-4 mb-8">
-              <span className="font-semibold text-gray-700">Quantity:</span>
+            <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-8 flex-wrap">
+              <span className="font-semibold text-gray-700 text-xs sm:text-sm">Quantity:</span>
               <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
-                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-4 py-2 hover:bg-gray-200 transition-colors font-bold text-lg text-gray-600">-</button>
-                <span className="px-4 py-2 font-bold w-14 text-center bg-white border-x border-gray-300">{quantity}</span>
-                <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="px-4 py-2 hover:bg-gray-200 transition-colors font-bold text-lg text-gray-600">+</button>
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-gray-200 transition-colors font-bold text-base sm:text-lg text-gray-600">-</button>
+                <span className="px-3 sm:px-4 py-1.5 sm:py-2 font-bold w-10 sm:w-14 text-center bg-white border-x border-gray-300 text-xs sm:text-base">{quantity}</span>
+                <button onClick={() => setQuantity(Math.min(product.stock, quantity + 1))} className="px-3 sm:px-4 py-1.5 sm:py-2 hover:bg-gray-200 transition-colors font-bold text-base sm:text-lg text-gray-600">+</button>
               </div>
-              <span className="text-sm font-medium text-orange-500 ml-4">
+              <span className="text-xs sm:text-sm font-medium text-orange-500">
                 {product.stock < 10 ? `Only ${product.stock} left in stock!` : 'In Stock'}
               </span>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <button onClick={handleAddToCart} className="flex-1 bg-white border-2 border-primary text-primary hover:bg-green-50 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
-                <FiShoppingCart size={20} /> Add to Cart
+            <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-6 sm:mb-10">
+              <button onClick={handleAddToCart} className="flex-1 bg-white border-2 border-primary text-primary hover:bg-green-50 py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 transition-all">
+                <FiShoppingCart size={18} /> Add to Cart
               </button>
-              <button onClick={handleBuyNow} className="flex-1 bg-primary hover:bg-secondary text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 premium-shadow transition-all">
+              <button onClick={handleBuyNow} className="flex-1 bg-primary hover:bg-secondary text-white py-3 sm:py-4 rounded-xl font-bold text-sm sm:text-base flex items-center justify-center gap-2 premium-shadow transition-all">
                 Buy Now
               </button>
-              <button className="w-14 h-14 shrink-0 bg-gray-50 border border-gray-200 hover:border-red-500 hover:text-red-500 text-gray-400 rounded-xl flex items-center justify-center transition-all">
-                <FiHeart size={24} />
+              <button className="h-11 sm:h-14 sm:w-14 shrink-0 bg-gray-50 border border-gray-200 hover:border-red-500 hover:text-red-500 text-gray-400 rounded-xl flex items-center justify-center transition-all">
+                <FiHeart size={20} />
               </button>
             </div>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-2 gap-4 py-6 border-y border-gray-100 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 py-4 sm:py-6 border-y border-gray-100 mb-6 sm:mb-8">
               <div className="flex items-center gap-3 text-gray-700">
                 <div className="bg-green-50 p-3 rounded-full text-primary"><FiTruck size={24} /></div>
                 <div>

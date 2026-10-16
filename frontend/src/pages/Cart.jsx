@@ -48,33 +48,33 @@ const Cart = () => {
 
   return (
     <div className="w-full">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Shopping Cart</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-8">Shopping Cart</h1>
       
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
         {/* Cart Items List */}
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 space-y-3 sm:space-y-6">
           {cartItems.map((item) => (
-            <div key={item.product} className="bg-white p-4 sm:p-6 rounded-2xl shadow-soft border border-gray-100 flex flex-col sm:flex-row items-center gap-6 group hover:shadow-md transition-shadow">
-              <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden shrink-0 border border-gray-100">
+            <div key={item.product} className="bg-white p-3 sm:p-6 rounded-xl sm:rounded-2xl shadow-soft border border-gray-100 flex flex-row items-center gap-3 sm:gap-6 group hover:shadow-md transition-shadow">
+              <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-50 rounded-lg sm:rounded-xl overflow-hidden shrink-0 border border-gray-100">
                 <img src={item.image?.url || item.image} alt={item.name} className="w-full h-full object-cover" />
               </div>
               
-              <div className="flex-1 text-center sm:text-left">
-                <Link to={`/product/${item.product}`} className="font-bold text-lg text-gray-800 hover:text-primary transition-colors line-clamp-1 mb-1">
+              <div className="flex-1 text-left min-w-0">
+                <Link to={`/product/${item.product}`} className="font-bold text-xs sm:text-lg text-gray-800 hover:text-primary transition-colors line-clamp-1 mb-0.5 sm:mb-1">
                   {item.name}
                 </Link>
-                <p className="text-primary font-bold text-lg mb-4 sm:mb-0">₹{item.price}</p>
+                <p className="text-primary font-bold text-sm sm:text-lg">₹{item.price}</p>
               </div>
 
-              <div className="flex items-center gap-6">
-                <div className="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden bg-gray-50">
-                  <button onClick={() => item.quantity > 1 ? handleQuantity(item, -1) : confirmRemove(item.product)} className="px-3 py-1 hover:bg-gray-200 transition-colors text-gray-600"><FiMinus /></button>
-                  <span className="px-4 py-1 font-bold bg-white text-gray-800 w-12 text-center">{item.quantity}</span>
-                  <button onClick={() => handleQuantity(item, 1)} className="px-3 py-1 hover:bg-gray-200 transition-colors text-gray-600"><FiPlus /></button>
+              <div className="flex items-center gap-2 sm:gap-6 shrink-0">
+                <div className="flex items-center border border-gray-200 sm:border-2 rounded-lg overflow-hidden bg-gray-50">
+                  <button onClick={() => item.quantity > 1 ? handleQuantity(item, -1) : confirmRemove(item.product)} className="px-2 py-0.5 sm:px-3 sm:py-1 hover:bg-gray-200 transition-colors text-xs sm:text-base text-gray-600"><FiMinus /></button>
+                  <span className="px-2 py-0.5 sm:px-4 sm:py-1 font-bold bg-white text-gray-800 w-8 sm:w-12 text-center text-xs sm:text-base">{item.quantity}</span>
+                  <button onClick={() => handleQuantity(item, 1)} className="px-2 py-0.5 sm:px-3 sm:py-1 hover:bg-gray-200 transition-colors text-xs sm:text-base text-gray-600"><FiPlus /></button>
                 </div>
                 
-                <button onClick={() => confirmRemove(item.product)} className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-3 rounded-full transition-all">
-                  <FiTrash2 size={20} />
+                <button onClick={() => confirmRemove(item.product)} className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-1.5 sm:p-3 rounded-full transition-all">
+                  <FiTrash2 size={16} className="sm:w-5 sm:h-5" />
                 </button>
               </div>
             </div>
